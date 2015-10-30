@@ -25,6 +25,7 @@ Servers:
 
 - mktemp
 - tar
+- ruby
 
 Installation
 ============
@@ -37,6 +38,8 @@ Then switch the `:scm` option to `:gitcopy` in `config/deploy.rb`:
 
     set :scm, :gitcopy
     
+Finally, DO NOT ADD `require 'capistrano/gitcopy'` to `Capfile` because `capistrano/setup` already loads the scm module with the :scm value you specified.
+
 
 Usage
 ============
