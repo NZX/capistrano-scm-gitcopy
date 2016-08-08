@@ -62,6 +62,7 @@ module Capistrano
       it "should run git update" do
         context.expects(:fetch).with(:git_shallow_clone).returns(nil)
         context.expects(:execute).with(:git, :remote, :update)
+        context.expects(:execute).with(:git, :submodule, :update, '--init', '--remote')
 
         subject.update
       end
@@ -70,6 +71,7 @@ module Capistrano
         context.expects(:fetch).with(:git_shallow_clone).returns('1')
         context.expects(:fetch).with(:branch).returns(:branch)
         context.expects(:execute).with(:git, :fetch, "--depth", '1', "origin",  :branch)
+        context.expects(:execute).with(:git, :submodule, :update, '--init', '--remote')
 
         subject.update
       end

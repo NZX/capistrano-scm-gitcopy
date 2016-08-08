@@ -38,6 +38,7 @@ class Capistrano::GitCopy < Capistrano::SCM
       else
         git :remote, :update
       end
+      git :submodule, :update, '--init', '--remote'
     end
 
     def fetch_revision
