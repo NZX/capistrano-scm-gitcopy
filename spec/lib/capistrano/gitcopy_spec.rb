@@ -42,7 +42,7 @@ module Capistrano
         context.expects(:fetch).with(:git_shallow_clone).returns(nil)
         context.expects(:repo_url).returns(:url)
         context.expects(:repo_path).returns(:path)
-        context.expects(:execute).with(:git, :clone, '--verbose', '--mirror', :url, :path)
+        context.expects(:execute).with(:git, :clone, '--verbose', '--recursive', :url, :path)
 
         subject.clone
       end
@@ -52,7 +52,7 @@ module Capistrano
         context.expects(:repo_url).returns(:url)
         context.expects(:repo_path).returns(:path)
 
-        context.expects(:execute).with(:git, :clone, '--verbose', '--mirror', "--depth", '1', '--no-single-branch', :url, :path)
+        context.expects(:execute).with(:git, :clone, '--verbose', '--recursive', "--depth", '1', '--no-single-branch', :url, :path)
 
         subject.clone
       end
