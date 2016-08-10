@@ -50,6 +50,10 @@ class Capistrano::GitCopy < Capistrano::SCM
       context.capture(:git, "rev-list --max-count=1 --abbrev-commit --abbrev=12 #{fetch(:branch)}")
     end
 
+    def submodule_path
+      context.capture(:git, "submodule | awk '{print $2}'")
+    end
+
     def local_tarfile
       "#{fetch(:tmp_dir)}/#{fetch(:application)}-#{fetch(:current_revision).strip}.tar.gz"
     end
@@ -67,9 +71,7 @@ class Capistrano::GitCopy < Capistrano::SCM
         git :archive, fetch(:branch), '--format', 'tar', '-o', local_tarfile.gsub('.gz', '')
       end
 
-      test = context.capture(:git, "submodule | awk '{print $2}'")
-      binding.pry
-      system 'tar', '--update', '--verbose', '--file', local_tarfile.gsub('.gz', ''), "$(git submodule | awk '{print $2}')"
+      system 'tar', '--update', '--verbose', '--file', local_tarfile.gsub('.gz', ''), submodule_path
       system 'gzip', local_tarfile.gsub('.gz', '')
     end
   end
