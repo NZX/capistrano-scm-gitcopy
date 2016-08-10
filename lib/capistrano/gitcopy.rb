@@ -23,6 +23,10 @@ class Capistrano::GitCopy < Capistrano::SCM
       git :'ls-remote --heads', repo_url
     end
 
+    def submodule_update
+      git :submodule, :update, '--init', '--remote'
+    end
+
     def clone
       if (depth = fetch(:git_shallow_clone))
         git :clone, '--verbose', '--recursive', '--depth', depth, '--no-single-branch', repo_url, repo_path
@@ -38,7 +42,7 @@ class Capistrano::GitCopy < Capistrano::SCM
       else
         git :remote, :update
       end
-      git :submodule, :update, '--init', '--remote'
+      submodule_update
     end
 
     def fetch_revision
@@ -57,11 +61,13 @@ class Capistrano::GitCopy < Capistrano::SCM
       if (tree = fetch(:repo_tree))
         tree = tree.slice %r#^/?(.*?)/?$#, 1
         components = tree.split('/').size
-        git :archive, fetch(:branch), tree, '--format', 'tar', "|gzip > #{local_tarfile}"
+        git :archive, fetch(:branch), tree, '--format', 'tar', '-o', local_tarfile.gsub('.gz', '')
       else
-        git :archive, fetch(:branch), '--format', 'tar', "|gzip > #{local_tarfile}"
+        git :archive, fetch(:branch), '--format', 'tar', '-o', local_tarfile.gsub('.gz', '')
       end
+      system 'tar', '--update', '--verbose', '--file', local_tarfile.gsub('.gz', ''), "$(git submodule | awk '{print $2}')"
+      system 'gzip', local_tarfile.gsub('.gz', '')
     end
-  end 
+  end
 
 end
