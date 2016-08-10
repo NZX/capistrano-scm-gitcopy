@@ -51,7 +51,7 @@ class Capistrano::GitCopy < Capistrano::SCM
     end
 
     def submodule_path
-      context.capture(:git, "submodule | awk '{print $2}'")
+      context.capture(:git, "submodule | awk '{print $2}'").strip
     end
 
     def local_tarfile
