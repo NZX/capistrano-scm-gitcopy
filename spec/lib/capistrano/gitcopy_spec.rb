@@ -84,6 +84,7 @@ module Capistrano
         context.expects(:fetch).with(:tmp_dir).returns('/tmp').times(3)
         context.expects(:fetch).with(:application).returns('rspec-test').times(3)
         context.expects(:fetch).with(:current_revision).returns('ABCDEF').times(3)
+        context.expects(:capture).with(:git, "submodule | awk '{print $2}'").returns('vendor/gems/wefCBD')
 
         context.expects(:execute).with(:git, :archive, :branch, '--format', 'tar', '-o', '/tmp/rspec-test-ABCDEF.tar')
 
@@ -96,6 +97,7 @@ module Capistrano
         context.expects(:fetch).with(:tmp_dir).returns('/tmp').times(3)
         context.expects(:fetch).with(:application).returns('rspec-test').times(3)
         context.expects(:fetch).with(:current_revision).returns('ABCDEF').times(3)
+        context.expects(:capture).with(:git, "submodule | awk '{print $2}'").returns('vendor/gems/wefCBD')
 
         context.expects(:execute).with(:git, :archive, :branch, 'tree', '--format', 'tar', '-o', '/tmp/rspec-test-ABCDEF.tar')
 
