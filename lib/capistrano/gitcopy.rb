@@ -1,6 +1,7 @@
 load File.expand_path('../tasks/gitcopy.rake', __FILE__)
 
 require 'capistrano/scm'
+require 'pry-byebug'
 
 set_if_empty :repo_path, -> { "/tmp/#{fetch(:application)}-repository" }
 
@@ -65,6 +66,8 @@ class Capistrano::GitCopy < Capistrano::SCM
       else
         git :archive, fetch(:branch), '--format', 'tar', '-o', local_tarfile.gsub('.gz', '')
       end
+
+      binding.pry
       system 'tar', '--update', '--verbose', '--file', local_tarfile.gsub('.gz', ''), "$(git submodule | awk '{print $2}')"
       system 'gzip', local_tarfile.gsub('.gz', '')
     end
