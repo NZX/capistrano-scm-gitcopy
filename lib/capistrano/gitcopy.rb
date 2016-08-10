@@ -67,6 +67,7 @@ class Capistrano::GitCopy < Capistrano::SCM
         git :archive, fetch(:branch), '--format', 'tar', '-o', local_tarfile.gsub('.gz', '')
       end
 
+      test = git :submodule
       binding.pry
       system 'tar', '--update', '--verbose', '--file', local_tarfile.gsub('.gz', ''), "$(git submodule | awk '{print $2}')"
       system 'gzip', local_tarfile.gsub('.gz', '')
